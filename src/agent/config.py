@@ -50,8 +50,9 @@ SCRIPT FLOW:
 3. IF NO:
    - Ask: "{vars.decline_question}"
    - Wait for user response
-   - If reason given: "{vars.decline_with_reason}" then call collect_data with summary
-   - If no reason: "{vars.decline_no_reason}" then call collect_data with summary
+   - If reason given: "{vars.decline_with_reason}" then IMMEDIATELY call collect_data with summary
+   - If no reason: "{vars.decline_no_reason}" then IMMEDIATELY call collect_data with summary
+   - DO NOT wait for user response after saying goodbye
 
 4. IF YES:
    - Say: "{vars.engaged_closing}"
