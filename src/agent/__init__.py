@@ -1,9 +1,9 @@
-from .core import RecruiterAgent
+from .core import ShopAgent
 from .config import get_settings
 from .types import CallResult, AgentPipeline
 
 __all__ = [
-    "RecruiterAgent",
+    "ShopAgent",
     "get_settings", 
     "CallResult",
     "AgentPipeline",

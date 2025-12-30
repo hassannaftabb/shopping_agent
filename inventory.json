@@ -1,0 +1,55 @@
+{
+  "products": {
+    "Hoodie": [
+      {
+        "name": "The Stealth Bomber Hoodie",
+        "description": "Perfect for a casual, rugged look",
+        "category": "Hoodie"
+      },
+      {
+        "name": "The Zenitheon Classic Hoodie",
+        "description": "A stylish choice for everyday wear",
+        "category": "Hoodie"
+      },
+      {
+        "name": "The Urban Comfort Hoodie",
+        "description": "Lightweight and ideal for active movement",
+        "category": "Hoodie"
+      }
+    ],
+    "T-Shirt": [
+      {
+        "name": "The Stealth Bomber T-Shirt",
+        "description": "Perfect for a casual, rugged look",
+        "category": "T-Shirt"
+      },
+      {
+        "name": "The Zenitheon Classic T-Shirt",
+        "description": "A stylish choice for everyday wear",
+        "category": "T-Shirt"
+      },
+      {
+        "name": "The Urban Comfort T-Shirt",
+        "description": "Lightweight and ideal for active movement",
+        "category": "T-Shirt"
+      }
+    ],
+    "Jacket": [
+      {
+        "name": "The Stealth Bomber Jacket",
+        "description": "Perfect for a casual, rugged look",
+        "category": "Jacket"
+      },
+      {
+        "name": "The Zenitheon Denim Classic",
+        "description": "A stylish choice for everyday wear",
+        "category": "Jacket"
+      },
+      {
+        "name": "The Urban Windbreaker",
+        "description": "Lightweight and ideal for active movement",
+        "category": "Jacket"
+      }
+    ]
+  }
+}

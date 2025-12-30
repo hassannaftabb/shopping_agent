@@ -7,22 +7,22 @@ from datetime import UTC, datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from .types import CallResult
+from .types import CallResult, OrderResult
 
 
 class DataKey(Enum):
-    CANDIDATE_NAME = "candidate_name"
-    INTEREST_STATUS = "interest_status"
-    DECLINE_REASON = "decline_reason"
+    CUSTOMER_NAME = "customer_name"
+    PRODUCT_SELECTION = "product_selection"
+    EMAIL = "email"
     SCRIPT_STAGE = "script_stage"
     SUMMARY = "summary"
 
 
 @dataclass
 class CallSession:
-    candidate_name: Optional[str] = None
-    interest_status: Optional[str] = None
-    decline_reason: Optional[str] = None
+    customer_name: Optional[str] = None
+    product_selection: Optional[str] = None
+    email: Optional[str] = None
     script_stage: str = "intro"
     summary: Optional[str] = None
     is_ai_completed: bool = False
@@ -30,7 +30,7 @@ class CallSession:
 
 
 class SessionManager:
-    def __init__(self, results_file: str = "call_results.csv"):
+    def __init__(self, results_file: str = "orders.csv"):
         self.results_file = results_file
         self.session = CallSession()
         self._ensure_csv_headers()
@@ -39,7 +39,7 @@ class SessionManager:
         if not os.path.exists(self.results_file):
             with open(self.results_file, "w", newline="", encoding="utf-8") as f:
                 writer = csv.writer(f)
-                writer.writerow(["timestamp", "candidate_name", "interest_status", "summary"])
+                writer.writerow(["timestamp", "customer_name", "product", "email", "order_id", "tracking_id", "summary"])
 
     def update_data(self, key: DataKey, value: str):
         """Update session data with key-value pair."""
@@ -48,19 +48,17 @@ class SessionManager:
 
         value = value.strip()
         
-        if key == DataKey.CANDIDATE_NAME:
-            self.session.candidate_name = value
-            print(f"📝 Candidate name updated: {value}")
+        if key == DataKey.CUSTOMER_NAME:
+            self.session.customer_name = value
+            print(f"Customer name updated: {value}")
             
-        elif key == DataKey.INTEREST_STATUS:
-            if value in ["Interested", "Not Interested", "Asked for more details"]:
-                self.session.interest_status = value
-                print(f"📝 Interest status updated: {value}")
+        elif key == DataKey.PRODUCT_SELECTION:
+            self.session.product_selection = value
+            print(f"Product selection updated: {value}")
                 
-        elif key == DataKey.DECLINE_REASON:
-            self.session.decline_reason = value
-            print(f"📝 Decline reason updated: {value}")
-            
+        elif key == DataKey.EMAIL:
+            self.session.email = value
+            print(f"Email updated: {value}")
             
         elif key == DataKey.SCRIPT_STAGE:
             self.session.script_stage = value
@@ -81,37 +79,47 @@ class SessionManager:
             return self.session.summary
         elif self.session.is_ai_completed:
             # AI completed but no summary - create basic summary
-            basic_summary = f"Call completed by AI"
-            if self.session.decline_reason:
-                basic_summary += f" - Reason: {self.session.decline_reason}"
+            basic_summary = f"Order completed by AI"
+            if self.session.product_selection:
+                basic_summary += f" - Product: {self.session.product_selection}"
             return basic_summary
         else:
             return "Call hung up by user"
 
-    def save_session_data(self):
-        """Save session data to CSV."""
-        if not self.session.interest_status:
-            print("📝 No significant data to save")
+    def save_order_data(self, order_id: str, tracking_id: str):
+        """Save order data to CSV."""
+        if not self.session.customer_name or not self.session.product_selection:
+            print("No order data to save")
             return None
 
-        from .constants import get_script_variables
-        script_vars = get_script_variables()
-        candidate_name = script_vars.candidate_name
-
-        result = CallResult(
+        result = OrderResult(
             timestamp=self.session.start_time.isoformat(),
-            candidate_name=candidate_name,
-            interest_status=self.session.interest_status or "Unknown",
+            customer_name=self.session.customer_name or "Unknown",
+            product=self.session.product_selection or "Unknown",
+            email=self.session.email or "Unknown",
+            order_id=order_id,
+            tracking_id=tracking_id,
             summary=self.generate_summary()
         )
 
         with open(self.results_file, "a", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
-            writer.writerow([result.timestamp, result.candidate_name, result.interest_status, result.summary])
+            writer.writerow([
+                result.timestamp,
+                result.customer_name,
+                result.product,
+                result.email,
+                result.order_id,
+                result.tracking_id,
+                result.summary
+            ])
 
-        print(f"📊 Session data saved:")
-        print(f"   Candidate: {result.candidate_name}")
-        print(f"   Status: {result.interest_status}")
+        print(f"Order data saved:")
+        print(f"   Customer: {result.customer_name}")
+        print(f"   Product: {result.product}")
+        print(f"   Email: {result.email}")
+        print(f"   Order ID: {result.order_id}")
+        print(f"   Tracking ID: {result.tracking_id}")
         print(f"   Summary: {result.summary}")
 
         return result

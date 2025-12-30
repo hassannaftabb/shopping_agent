@@ -14,40 +14,34 @@ from livekit.agents.voice import Agent
 from livekit.plugins import noise_cancellation, silero
 from livekit.plugins.turn_detector.english import EnglishModel
 
-from .config import get_recruiter_prompt, get_settings
+from .config import get_shop_prompt, get_settings
 from .providers import create_llm_provider, create_stt_provider, create_tts_provider
 from .session import SessionManager
-from .tools import create_data_collection_tool
-from .types import CallResult
+from .tools import (
+    create_data_collection_tool,
+    create_generate_order_tool,
+    create_get_product_options_tool,
+    create_send_otp_tool,
+    create_verify_otp_tool,
+)
+from .types import OrderResult
 
-logger = logging.getLogger("recruiter_agent")
+logger = logging.getLogger("shop_agent")
 logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 
 
-class RecruiterAgent:
+class ShopAgent:
     def __init__(self):
         self.settings = get_settings()
-        self.results_file = "call_results.csv"
+        self.results_file = "orders.csv"
         self.session_manager = SessionManager(self.results_file)
         self._call_completed = False
-        self._ensure_csv_headers()
 
-    def _ensure_csv_headers(self):
-        if not os.path.exists(self.results_file):
-            with open(self.results_file, "w", newline="", encoding="utf-8") as f:
-                writer = csv.writer(f)
-                writer.writerow(["timestamp", "candidate_name", "interest_status", "summary"])
-
-    def _save_result(self, result: CallResult):
-        with open(self.results_file, "a", newline="", encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerow([result.timestamp, result.candidate_name, result.interest_status, result.summary])
 
     async def _hangup_call(self, ctx: agents.JobContext):
         try:
             if not self._call_completed:
-                logger.info("Saving session data before hangup")
-                self.session_manager.save_session_data()
+                logger.info("Hanging up call")
                 self._call_completed = True
             
             logger.info("Hanging up call")
@@ -76,9 +70,11 @@ class RecruiterAgent:
             logger.warning(f"Force cleanup check failed: {e}")
 
     async def _watchdog(self, ctx: agents.JobContext):
-        await asyncio.sleep(60)
-        logger.warning("Watchdog timeout - forcing hangup")
-        await self._hangup_call(ctx)
+        """Watchdog to prevent infinite sessions. Extended timeout for shopping flow with OTP."""
+        await asyncio.sleep(600)
+        if not self._call_completed:
+            logger.warning("Watchdog timeout (10 min) - forcing hangup")
+            await self._hangup_call(ctx)
 
     async def entrypoint(self, ctx: agents.JobContext):
         start_time = datetime.now(tz=UTC)
@@ -101,13 +97,23 @@ class RecruiterAgent:
             )
 
             data_collection_tool = create_data_collection_tool(self.session_manager)
+            get_product_options_tool = create_get_product_options_tool()
+            send_otp_tool = create_send_otp_tool()
+            verify_otp_tool = create_verify_otp_tool()
+            generate_order_tool = create_generate_order_tool(self.session_manager)
 
             voice_agent = Agent(
-                instructions=get_recruiter_prompt(),
+                instructions=get_shop_prompt(),
                 stt=stt,
                 llm=llm,
                 tts=tts,
-                tools=[data_collection_tool],
+                tools=[
+                    data_collection_tool,
+                    get_product_options_tool,
+                    send_otp_tool,
+                    verify_otp_tool,
+                    generate_order_tool,
+                ],
                 vad=silero.VAD.load(),
                 turn_detection=EnglishModel(),
             )
@@ -139,7 +145,6 @@ class RecruiterAgent:
                         logger.info("Summary provided - call completed by AI")
                         call_completed = True
                         self._call_completed = True
-                        self.session_manager.save_session_data()
                         asyncio.create_task(self._delayed_hangup(ctx))
                         break
 

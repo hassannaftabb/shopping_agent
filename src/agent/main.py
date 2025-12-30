@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 from livekit import agents
 
-from .core import RecruiterAgent
+from .core import ShopAgent
 from .config import get_settings
 
 
@@ -26,13 +26,13 @@ def main():
         if value:
             os.environ[key] = value
 
-    agent = RecruiterAgent()
+    agent = ShopAgent()
     
-    print("Starting Recruiter Agent...")
+    print("Starting Shop Whisper Agent...")
     agents.cli.run_app(
         agents.WorkerOptions(
             entrypoint_fnc=agent.entrypoint,
-            agent_name="recruiter-agent",
+            agent_name="shop-whisper-agent",
             job_memory_warn_mb=1024,
         ),
     )

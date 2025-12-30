@@ -25,6 +25,17 @@ class CallResult:
 
 
 @dataclass(slots=True)
+class OrderResult:
+    timestamp: str
+    customer_name: str
+    product: str
+    email: str
+    order_id: str
+    tracking_id: str
+    summary: str
+
+
+@dataclass(slots=True)
 class AgentPipeline:
     stt: STTProvider
     llm: LLMProvider

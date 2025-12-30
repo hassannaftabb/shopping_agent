@@ -5,33 +5,22 @@ from dataclasses import dataclass
 
 @dataclass
 class ScriptVariables:
-    """Configuration variables for the recruitment script."""
+    """Configuration variables for the Zenitheon Shop Whisper ecommerce script."""
     
     # Company details
-    company_name: str = "Ultimate Outsourcing"
-    recruiter_name: str = "Morgan"
-    recruiter_title: str = "Recruitment Consultant"
+    company_name: str = "Zenitheon"
+    agent_name: str = "Zen"
+    agent_title: str = "personal AI shopping assistant"
     
-    candidate_name: str = "John"
-    
-    # Job details - these can be customized per call
-    role: str = "Software Developer"
-    industry: str = "Technology"
-    location: str = "Remote"
-    salary: str = "$80,000 to $120,000"
+    customer_name: str = ""
     
     # Call flow customization
-    intro_greeting: str = f"Hi, {candidate_name}, this is {recruiter_name}, {recruiter_title} calling from {company_name}. Is it a good time to talk?"
-    reason_for_call: str = f"We're recruiting for a {role} {industry} in {location}, offering {salary}. Are you open to exploring this opportunity?"
-    
-    # Decline handling
-    decline_question: str = f"I completely understand, {candidate_name}. Is it salary, location, timing, or something else?"
-    decline_with_reason: str = "Got it, thanks for sharing. I can pass your details to our Senior Consultant if something closer comes up. Thanks for your time. Bye."
-    decline_no_reason: str = f"No problem at all—thank you for your time today, {candidate_name}. Wishing you all the best. Goodbye."
-        
-    # Closing responses
-    engaged_closing: str = f"Perfect, {candidate_name}. You'll hear from our Senior Consultant shortly. Thanks for your time today. Goodbye."
-    not_interested_closing: str = f"Understood, {candidate_name}. Thanks again for your time—wishing you all the best. Goodbye."
+    intro_greeting: str = "Welcome to Zenitheon. I am Zen, your personal AI shopping assistant. May I know who I am speaking with today?"
+    needs_assessment: str = "It is a pleasure to meet you, {customer_name}. How can I help you upgrade your wardrobe today? Are you looking for something specific?"
+    product_selection_prompt: str = "Which one of these catches your eye?"
+    email_request: str = "Great selection. The {product_name} is a favorite. To finalize your order and send you the generated Tracking ID, could you please share your email address?"
+    otp_request: str = "Thank you. I have sent a verification code to your email. Please provide the code to confirm your order."
+    order_confirmation: str = "Thank you. I have confirmed your order. A confirmation email with your unique Tracking ID has just been sent to {email}. Thank you for shopping with Zenitheon. Have a stylish day!"
 
 
 DEFAULT_SCRIPT_VARS = ScriptVariables()
@@ -48,19 +37,15 @@ def update_script_variables(**kwargs) -> ScriptVariables:
     current_vars = DEFAULT_SCRIPT_VARS
     updated_vars = ScriptVariables(
         company_name=kwargs.get('company_name', current_vars.company_name),
-        recruiter_name=kwargs.get('recruiter_name', current_vars.recruiter_name),
-        recruiter_title=kwargs.get('recruiter_title', current_vars.recruiter_title),
-        role=kwargs.get('role', current_vars.role),
-        industry=kwargs.get('industry', current_vars.industry),
-        location=kwargs.get('location', current_vars.location),
-        salary=kwargs.get('salary', current_vars.salary),
+        agent_name=kwargs.get('agent_name', current_vars.agent_name),
+        agent_title=kwargs.get('agent_title', current_vars.agent_title),
+        customer_name=kwargs.get('customer_name', current_vars.customer_name),
         intro_greeting=kwargs.get('intro_greeting', current_vars.intro_greeting),
-        reason_for_call=kwargs.get('reason_for_call', current_vars.reason_for_call),
-        decline_question=kwargs.get('decline_question', current_vars.decline_question),
-        decline_with_reason=kwargs.get('decline_with_reason', current_vars.decline_with_reason),
-        decline_no_reason=kwargs.get('decline_no_reason', current_vars.decline_no_reason),
-        engaged_closing=kwargs.get('engaged_closing', current_vars.engaged_closing),
-        not_interested_closing=kwargs.get('not_interested_closing', current_vars.not_interested_closing),
+        needs_assessment=kwargs.get('needs_assessment', current_vars.needs_assessment),
+        product_selection_prompt=kwargs.get('product_selection_prompt', current_vars.product_selection_prompt),
+        email_request=kwargs.get('email_request', current_vars.email_request),
+        otp_request=kwargs.get('otp_request', current_vars.otp_request),
+        order_confirmation=kwargs.get('order_confirmation', current_vars.order_confirmation),
     )
     DEFAULT_SCRIPT_VARS = updated_vars
     return updated_vars
