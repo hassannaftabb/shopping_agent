@@ -1,4 +1,4 @@
-# Zenitheon Shop Whisper - Ecommerce Voice Agent
+# Zenitheon Shop - Ecommerce Voice Agent
 
 A modular voice agent for ecommerce shopping assistance using LiveKit, Deepgram STT, OpenAI LLM, and Cartesia TTS. The agent follows a structured shopping script, handles product recommendations, OTP verification, and automatically saves orders to CSV.
 
