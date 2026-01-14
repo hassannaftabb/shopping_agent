@@ -141,7 +141,7 @@ class ScriptVariables:
 2. **Start the Web Server** (in another terminal):
 
    ```bash
-   uv run python web_main.py
+   uv run python run.py
    ```
 
 3. **Open Browser**:
