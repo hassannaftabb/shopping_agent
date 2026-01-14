@@ -4,51 +4,60 @@
       {
         "name": "The Stealth Bomber Hoodie",
         "description": "Perfect for a casual, rugged look",
-        "category": "Hoodie"
+        "category": "Hoodie",
+        "price": 3499
       },
       {
         "name": "The Zenitheon Classic Hoodie",
         "description": "A stylish choice for everyday wear",
-        "category": "Hoodie"
+        "category": "Hoodie",
+        "price": 2999
       },
       {
         "name": "The Urban Comfort Hoodie",
         "description": "Lightweight and ideal for active movement",
-        "category": "Hoodie"
+        "category": "Hoodie",
+        "price": 2799
       }
     ],
     "T-Shirt": [
       {
         "name": "The Stealth Bomber T-Shirt",
         "description": "Perfect for a casual, rugged look",
-        "category": "T-Shirt"
+        "category": "T-Shirt",
+        "price": 1299
       },
       {
         "name": "The Zenitheon Classic T-Shirt",
         "description": "A stylish choice for everyday wear",
-        "category": "T-Shirt"
+        "category": "T-Shirt",
+        "price": 999
       },
       {
         "name": "The Urban Comfort T-Shirt",
         "description": "Lightweight and ideal for active movement",
-        "category": "T-Shirt"
+        "category": "T-Shirt",
+        "price": 899
       }
     ],
     "Jacket": [
       {
         "name": "The Stealth Bomber Jacket",
         "description": "Perfect for a casual, rugged look",
-        "category": "Jacket"
+        "category": "Jacket",
+        "price": 5499
       },
       {
         "name": "The Zenitheon Denim Classic",
         "description": "A stylish choice for everyday wear",
-        "category": "Jacket"
+        "category": "Jacket",
+        "price": 4499
       },
       {
         "name": "The Urban Windbreaker",
         "description": "Lightweight and ideal for active movement",
-        "category": "Jacket"
+        "category": "Jacket",
+        "price": 3999
       }
     ]
   }

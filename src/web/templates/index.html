@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop Whisper: Zenitheon Edition</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Shop Whisper: Zenitheon Edition</h1>
+        <p class="subtitle">Where style meets innovation</p>
+      </header>
+
+      <div class="shop-section">
+        <div class="products-grid" id="productsGrid">
+          <div class="loading">Loading products...</div>
+        </div>
+      </div>
+
+      <div class="call-section">
+        <div class="call-controls">
+          <button id="startCallBtn" class="btn btn-primary">
+            <span class="icon">📞</span>
+            Talk to Shop Whisper
+          </button>
+          <button id="endCallBtn" class="btn btn-danger" style="display: none">
+            <span class="icon">📴</span>
+            End Call
+          </button>
+        </div>
+
+        <div id="callStatus" class="call-status"></div>
+        <div id="audioContainer" style="display: none"></div>
+      </div>
+    </div>
+
+    <!-- Load LiveKit client -->
+    <script src="https://cdn.jsdelivr.net/npm/livekit-client@latest/dist/livekit-client.umd.min.js"></script>
+    <!-- Load our app script immediately -->
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>

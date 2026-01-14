@@ -210,9 +210,14 @@ def create_get_product_options_tool() -> Any:
             
             product_list = []
             for i, product in enumerate(products, 1):
-                product_list.append(f"{product['name']}: {product['description']}")
+                price_str = ""
+                if product.get('price'):
+                    price_str = f" - PKR {product['price']:,}"
+                else:
+                    price_str = " - Price on request"
+                product_list.append(f"Option {i}: {product['name']} - {product['description']}{price_str}")
             
-            result = f"Based on our latest collection, I have {len(products)} top recommendations for you:\n\n" + "\n\n".join(product_list)
+            result = f"Based on our latest collection, I have {len(products)} top recommendations for you:\n\n" + "\n\n".join(product_list) + "\n\nAll prices are in PKR (Pakistani Rupees)."
             
             return result
 

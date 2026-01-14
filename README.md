@@ -130,51 +130,88 @@ class ScriptVariables:
 
 ## Usage
 
-### 1. Start the Agent
+### Option 1: Web Interface (Recommended)
+
+1. **Start the Agent Worker** (in one terminal):
+
+   ```bash
+   uv run python -m agent.main dev
+   ```
+
+2. **Start the Web Server** (in another terminal):
+
+   ```bash
+   uv run python web_main.py
+   ```
+
+3. **Open Browser**:
+   - Navigate to `http://localhost:5000`
+   - Browse products
+   - Click "Talk to Shop Whisper" to start a voice conversation
+   - Allow microphone access when prompted
+
+See [README_WEB.md](README_WEB.md) for detailed web interface documentation.
+
+### Option 2: Direct LiveKit Connection
 
 ```bash
 # Connect to a specific Livekit playground room
 uv run python -m agent.main connect --room "your-room-name"
 ```
 
-### 2. Test the Agent
+Then:
 
 1. Open LiveKit Playground or your LiveKit client
 2. Join the room specified in the command
 3. The agent will automatically start the shopping script
-4. Follow the conversation flow:
-   - Agent introduces itself
-   - Customer provides name
-   - Agent asks about product needs
-   - Customer mentions product category (Hoodie, T-Shirt, or Jacket)
-   - Agent presents product options
-   - Customer selects a product
-   - Agent requests email
-   - Agent sends OTP to email
-   - Customer provides OTP
-   - Agent confirms order and generates tracking ID
-5. Orders will be saved to `orders.csv`
+
+### Conversation Flow
+
+The agent follows this flow:
+
+- Agent introduces itself
+- Customer provides name
+- Agent asks about product needs
+- Customer mentions product category (Hoodie, T-Shirt, or Jacket)
+- Agent presents product options
+- Customer selects a product
+- Agent requests email
+- Agent sends OTP to email
+- Customer provides OTP
+- Agent confirms order and generates tracking ID
+- Orders are saved to `orders.csv`
 
 ## Project Structure
 
 ```
-src/agent/
-├── __init__.py          # Main exports
-├── main.py             # Entry point
-├── config.py           # Settings and shop prompt
-├── core.py             # Main agent logic
-├── constants.py        # Script variables configuration
-├── types.py            # Type definitions and protocols
-├── session.py          # Session data management
-├── tools.py            # AI function tools
-└── providers/          # Extensible provider interfaces
+src/
+├── agent/              # Voice agent core
+│   ├── __init__.py
+│   ├── main.py        # Agent entry point
+│   ├── config.py      # Settings and shop prompt
+│   ├── core.py        # Main agent logic
+│   ├── constants.py   # Script variables configuration
+│   ├── types.py       # Type definitions and protocols
+│   ├── session.py     # Session data management
+│   ├── tools.py       # AI function tools
+│   └── providers/     # Extensible provider interfaces
+│       ├── __init__.py
+│       ├── stt.py     # Speech-to-text providers
+│       ├── llm.py     # Language model providers
+│       └── tts.py     # Text-to-speech providers
+└── web/               # Web interface
     ├── __init__.py
-    ├── stt.py          # Speech-to-text providers
-    ├── llm.py          # Language model providers
-    └── tts.py          # Text-to-speech providers
+    ├── app.py         # Flask application
+    ├── server.py      # Web server entry point
+    ├── templates/     # HTML templates
+    │   └── index.html
+    └── static/        # Static assets
+        ├── app.js     # Frontend JavaScript
+        └── style.css  # Styles
 
-inventory.json          # Product catalog
-orders.csv             # Order records (generated)
+inventory.json         # Product catalog
+orders.csv            # Order records (generated)
+web_main.py           # Web server entry point
 ```
 
 ## Script Flow

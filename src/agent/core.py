@@ -78,14 +78,20 @@ class ShopAgent:
 
     async def entrypoint(self, ctx: agents.JobContext):
         start_time = datetime.now(tz=UTC)
-        logger.info(f"Agent started at {start_time.isoformat()}")
+        logger.info("=" * 60)
+        logger.info(f"Agent job started at {start_time.isoformat()}")
+        logger.info(f"Room: {ctx.room.name}")
+        logger.info("=" * 60)
 
         try:
+            logger.info("Connecting to room...")
             await ctx.connect()
-            logger.info(f"Connected to room: {ctx.room.name}")
+            logger.info(f"✓ Connected to room: {ctx.room.name}")
 
+            logger.info("Waiting for participant to join...")
             participant = await ctx.wait_for_participant()
-            logger.info(f"Participant connected: {participant.identity}")
+            logger.info(f"✓ Participant connected: {participant.identity}")
+            logger.info("=" * 60)
 
             stt = create_stt_provider(self.settings.deepgram_api_key, self.settings.deepgram_model)
             llm = create_llm_provider(self.settings.openai_api_key, self.settings.openai_model)
